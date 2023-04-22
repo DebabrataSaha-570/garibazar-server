@@ -42,6 +42,20 @@ async function run() {
       res.json(result);
     });
 
+    app.get("/product/sedan", async (req, res) => {
+      const query = { bodyType: "Sedan" };
+      const sedanProduct = productsCollection.find(query);
+      const result = await sedanProduct.toArray();
+      res.json(result);
+    });
+
+    app.get("/product/hatchback", async (req, res) => {
+      const query = { bodyType: "Hatchback" };
+      const hatchbackProduct = productsCollection.find(query);
+      const result = await hatchbackProduct.toArray();
+      res.json(result);
+    });
+
     //POST API
     app.post("/addProduct", async (req, res) => {
       const product = req.body;
