@@ -35,6 +35,13 @@ async function run() {
       res.json(result);
     });
 
+    app.get("/product/suv", async (req, res) => {
+      const query = { bodyType: "SUV" };
+      const suvProduct = productsCollection.find(query);
+      const result = await suvProduct.toArray();
+      res.json(result);
+    });
+
     //POST API
     app.post("/addProduct", async (req, res) => {
       const product = req.body;
