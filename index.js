@@ -11,7 +11,7 @@ app.use(cors());
 app.use(express.json());
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.orodex1.mongodb.net/?retryWrites=true&w=majority`;
-console.log(uri);
+// console.log(uri);
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -27,6 +27,13 @@ async function run() {
     await client.connect();
     const database = client.db("gariBazar");
     const productsCollection = database.collection("products");
+
+    //GET API
+    app.get("/allProducts", async (req, res) => {
+      const cursor = productsCollection.find({});
+      const result = await cursor.toArray();
+      res.json(result);
+    });
 
     //POST API
     app.post("/addProduct", async (req, res) => {
