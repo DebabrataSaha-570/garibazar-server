@@ -30,9 +30,17 @@ async function run() {
 
     //GET API
     app.get("/allProducts", async (req, res) => {
-      const cursor = productsCollection.find({});
-      const result = await cursor.toArray();
-      res.json(result);
+      const page = parseInt(req.query.page);
+      const size = parseInt(req.query.size);
+      // console.log(page, size);
+      const query = {};
+      const cursor = productsCollection.find(query);
+      const result = await cursor
+        .skip(page * size)
+        .limit(size)
+        .toArray();
+      const count = await productsCollection.estimatedDocumentCount();
+      res.json({ count, result });
     });
 
     app.get("/product/suv", async (req, res) => {
