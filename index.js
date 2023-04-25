@@ -28,6 +28,7 @@ async function run() {
     await client.connect();
     const database = client.db("gariBazar");
     const productsCollection = database.collection("products");
+    const bookingsCollection = database.collection("bookings");
 
     //GET API
     app.get("/allProducts", async (req, res) => {
@@ -44,8 +45,9 @@ async function run() {
       res.json({ count, result });
     });
 
-    app.get("/product/:id", async (req, res) => {
+    app.get("/productDetail/:id", async (req, res) => {
       const id = req.params.id;
+      console.log("id", id);
       const query = { _id: new ObjectId(id) };
       const result = await productsCollection.findOne(query);
       res.json(result);
@@ -76,6 +78,12 @@ async function run() {
     app.post("/addProduct", async (req, res) => {
       const product = req.body;
       const result = await productsCollection.insertOne(product);
+      console.log(result);
+      res.json(result);
+    });
+    app.post("/addBookNow", async (req, res) => {
+      const booking = req.body;
+      const result = await bookingsCollection.insertOne(booking);
       console.log(result);
       res.json(result);
     });
