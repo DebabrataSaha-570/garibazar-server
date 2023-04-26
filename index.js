@@ -57,6 +57,13 @@ async function run() {
       const result = await productsCollection.findOne(query);
       res.json(result);
     });
+    app.get("/booking/:email", async (req, res) => {
+      const email = req.params.email;
+      const query = { userEmail: email };
+      const booking = bookingsCollection.find(query);
+      const result = await booking.toArray();
+      res.json(result);
+    });
 
     app.get("/product/suv", async (req, res) => {
       const query = { bodyType: "SUV" };
@@ -97,6 +104,14 @@ async function run() {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await bookingsCollection.deleteOne(query);
+      console.log(result);
+      res.json(result);
+    });
+
+    app.delete("/deleteProduct/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await productsCollection.deleteOne(query);
       console.log(result);
       res.json(result);
     });
