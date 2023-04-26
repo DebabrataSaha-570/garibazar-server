@@ -99,6 +99,25 @@ async function run() {
       console.log(result);
       res.json(result);
     });
+    // PUT API
+    app.put("/booking/:id", async (req, res) => {
+      const id = req.params.id;
+      const body = req.body;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: {
+          status: body.status,
+        },
+      };
+      const result = await bookingsCollection.updateOne(
+        filter,
+        updateDoc,
+        options
+      );
+      console.log(result);
+      res.json(result);
+    });
     // Delete api
     app.delete("/deleteBooking/:id", async (req, res) => {
       const id = req.params.id;
