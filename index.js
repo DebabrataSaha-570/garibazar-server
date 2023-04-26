@@ -44,6 +44,11 @@ async function run() {
       const count = await productsCollection.estimatedDocumentCount();
       res.json({ count, result });
     });
+    app.get("/allBookings", async (req, res) => {
+      const bookings = bookingsCollection.find({});
+      const result = await bookings.toArray();
+      res.json(result);
+    });
 
     app.get("/productDetail/:id", async (req, res) => {
       const id = req.params.id;
@@ -84,6 +89,14 @@ async function run() {
     app.post("/addBookNow", async (req, res) => {
       const booking = req.body;
       const result = await bookingsCollection.insertOne(booking);
+      console.log(result);
+      res.json(result);
+    });
+    // Delete api
+    app.delete("/deleteBooking/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await bookingsCollection.deleteOne(query);
       console.log(result);
       res.json(result);
     });
