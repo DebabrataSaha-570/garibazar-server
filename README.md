@@ -39,6 +39,6 @@ Technologies I have used in this project:
 If you want download this project you can download zip file or clone this site.
 After download you open the project in your IDE and open your terminal. Then for run this project you type in your terminal "yarn start".
 
-[Live Link](https://trip-to-paradise-new.web.app/)
+[Live Link](https://gari-bazar-e92d0.web.app/)
 
 You can see client side code in [Gari-Bazar Client](https://github.com/DebabrataSaha-570/garibazar-client)

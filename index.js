@@ -29,6 +29,8 @@ async function run() {
     const database = client.db("gariBazar");
     const productsCollection = database.collection("products");
     const bookingsCollection = database.collection("bookings");
+    const usersCollection = database.collection("users");
+    const reviewCollection = database.collection("reviews");
 
     //GET API
     app.get("/allProducts", async (req, res) => {
@@ -85,6 +87,27 @@ async function run() {
       const result = await hatchbackProduct.toArray();
       res.json(result);
     });
+    app.get("/users", async (req, res) => {
+      const users = usersCollection.find({});
+      const result = await users.toArray();
+      res.json(result);
+    });
+    app.get("/users/:email", async (req, res) => {
+      const email = req.params.email;
+      const query = { email: email };
+      const user = await usersCollection.findOne(query);
+      let isAdmin = false;
+      if (user?.role === "admin") {
+        isAdmin = true;
+      }
+      res.json({ admin: isAdmin });
+    });
+
+    app.get("/reviews", async (req, res) => {
+      const reviews = reviewCollection.find({});
+      const result = await reviews.toArray();
+      res.json(result);
+    });
 
     //POST API
     app.post("/addProduct", async (req, res) => {
@@ -99,7 +122,60 @@ async function run() {
       console.log(result);
       res.json(result);
     });
+    app.post("/users", async (req, res) => {
+      const user = req.body;
+      const result = await usersCollection.insertOne(user);
+      console.log(result);
+      res.send(result);
+    });
     // PUT API
+
+    app.put("/users", async (req, res) => {
+      const user = req.body;
+      const filter = { email: user.email };
+      const options = { upsert: true };
+      const updateDoc = { $set: user };
+      const result = await usersCollection.updateOne(
+        filter,
+        updateDoc,
+        options
+      );
+      console.log(result);
+      res.json(result);
+    });
+
+    app.put("/users/admin/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updateDoc = { $set: { role: "admin" } };
+      const result = await usersCollection.updateOne(
+        filter,
+        updateDoc,
+        options
+      );
+      console.log(result);
+      res.json(result);
+    });
+    app.put("/users/review/:email", async (req, res) => {
+      const email = req.params.email;
+      const body = req.body;
+      const filter = { email: email };
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: {
+          review: body,
+        },
+      };
+      const result = await reviewCollection.updateOne(
+        filter,
+        updateDoc,
+        options
+      );
+      console.log(result);
+      res.json(result);
+    });
+
     app.put("/booking/:id", async (req, res) => {
       const id = req.params.id;
       const body = req.body;
@@ -131,6 +207,14 @@ async function run() {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await productsCollection.deleteOne(query);
+      console.log(result);
+      res.json(result);
+    });
+
+    app.delete("/users/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await usersCollection.deleteOne(query);
       console.log(result);
       res.json(result);
     });
